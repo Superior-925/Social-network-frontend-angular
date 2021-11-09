@@ -1,0 +1,137 @@
+<main>
+  <div class="container-lg d-flex main-block">
+    <div class="col-lg-5 logo-description-block">
+      <div class="col-lg-5 facebook-logo-block">
+      <img src="assets/facebook-logo.svg" alt="facebook-logo">
+      </div>
+        <div class="col-lg-12 facebook-description-block">Facebook helps you connect and share with the people in your life.</div>
+    </div>
+    <div class="col-lg-5 form-block d-flex m-auto">
+      <div class="form-block-content">
+        <div class="row justify-content-center form-block-wrapper">
+          <div class="col-lg-11 mt-4 form-block-content-items">
+
+            <form [formGroup]="loginForm" novalidate (ngSubmit)="loginSubmit()">
+              <div class="form-group input-email">
+                <input type="text" class="form-control" id="form-login" formControlName="email" placeholder="Enter email"/>
+                <div class="alert alert-danger mt-2" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+                  <small *ngIf="loginForm.controls['email'].errors?.email">
+                    This is not an email
+                  </small>
+                  <small *ngIf="loginForm.controls['email'].errors?.required">
+                    Email not specified
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group mt-3">
+                <input type="password" class="form-control" name="email" id="form-password" formControlName="password" placeholder="Enter password" />
+
+                <div class="alert alert-danger mt-2" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+                  <small *ngIf="loginForm.controls['password'].errors?.required">
+                    Password not specified
+                  </small>
+                  <small *ngIf="loginForm.controls['password'].errors?.minlength">
+                    Password must be equal to or longer than six characters
+                  </small>
+                </div>
+                <div class="submit-data-error" *ngIf="incorrectEmailPassword">Incorrect email or password!</div>
+              </div>
+
+              <div class="form-group mt-4 mb-4 d-flex justify-content-center">
+                <button class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold" id="submit-button-login" [disabled]="loginForm.invalid">
+                  Log In
+                </button>
+              </div>
+            </form>
+
+            <div class="row mb-4">
+              <span class="text-center">OR</span>
+            </div>
+
+            <button type="button" (click)="authWithGoogle()" id="google-auth-button"><img src="assets/google-logo.jpg" class="google-logo">Continue with Google</button>
+            <hr class="break-line">
+            <div class="row mb-4 justify-content-center">
+              <button type="button" class="btn btn-success w-50 mt-2" data-bs-toggle="modal" data-bs-target="#createAccauntModal">Create a new account</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container-lg footer-block d-flex justify-content-center">
+    Facebook © 2021
+  </div>
+</footer>
+
+<div class="modal fade" id="createAccauntModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title d-block">
+        <h2 class="modal-title-main">Sign Up</h2>
+        <h5 class="modal-subtitle fw-light">It's quick and easy.</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="signUpForm" novalidate (ngSubmit)="signupSubmit()">
+
+          <div class="form-group input-nickname">
+            <input type="text" class="form-control" formControlName="nickname" placeholder="Enter nickname"/>
+
+            <div class="alert alert-danger mt-2" *ngIf="signUpForm.controls['nickname'].invalid && signUpForm.controls['nickname'].touched">
+              <small *ngIf="signUpForm.controls['nickname'].errors?.pattern">
+                Nickname must consist of letters and numbers
+              </small>
+              <small *ngIf="signUpForm.controls['nickname'].errors?.required">
+                Nickname not specified
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group input-email mt-3">
+            <input type="text" class="form-control" formControlName="email" placeholder="Enter email"/>
+
+            <div class="alert alert-danger mt-2" *ngIf="signUpForm.controls['email'].invalid && signUpForm.controls['email'].touched">
+              <small *ngIf="signUpForm.controls['email'].errors?.email">
+                This is not an email
+              </small>
+              <small *ngIf="signUpForm.controls['email'].errors?.required">
+                Email not specified
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <input type="password" class="form-control" name="email" formControlName="password" placeholder="Enter password" />
+            <div class="alert alert-danger mt-2" *ngIf="signUpForm.controls['password'].invalid && signUpForm.controls['password'].touched">
+              <small *ngIf="signUpForm.controls['password'].errors?.required">
+                Password not specified
+              </small>
+              <small *ngIf="signUpForm.controls['password'].errors?.minlength">
+                Password must be equal to or longer than six characters
+              </small>
+            </div>
+            <div class="submit-data-error" *ngIf="emailAlreadyExist">This email already exists!</div>
+            <div class="submit-data-error mt-3" *ngIf="nicknameAlreadyExist">This nickname already exists!</div>
+          </div>
+
+          <div class="form-group mt-4 mb-4 d-flex justify-content-center">
+            <button class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold" id="submit-button-signup" [disabled]="signUpForm.invalid">
+              Sign In
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

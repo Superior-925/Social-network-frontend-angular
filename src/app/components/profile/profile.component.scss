@@ -1,0 +1,84 @@
+.wrapper {
+  box-sizing: border-box;
+}
+
+.header-block {
+  width: 100%;
+  margin: auto;
+  border: solid 1px darkgray;
+  border-radius: 5px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  padding-bottom: 1vh;
+}
+
+.main-container {
+  width: 100%;
+  margin: auto;
+  border: solid 1px darkgray;
+  border-radius: 5px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.buttons-block {
+  height: 100%;
+  margin: 0.5rem 0.5rem;
+  border: solid 1px;
+  border-radius: 3px;
+  background-color: #ebebeb;
+  padding: 0.5rem 0.5rem;
+  :not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.my-page-button {
+  width: 100%;
+}
+
+.content-block {
+  flex: auto;
+  padding: 0.5rem 0.5rem;
+}
+
+.content-block-post-button {
+  margin: auto;
+  width: 30%;
+}
+
+.post-item {
+  padding: 0.5rem 0.5rem;
+  border: 1px solid darkgray;
+  border-radius: 5px;
+}
+
+.invisible {
+  display: none;
+}
+
+.disable{
+  pointer-events: none;
+}
+
+.delete-post-button {
+  margin-left: 0.5rem;
+}
+
+.comment-form {
+  margin: auto;
+  width: 70%;
+}
+
+.comment-author-block {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comments-block-content {
+  width: 70%;
+  margin: auto;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-right: 1rem;
+}

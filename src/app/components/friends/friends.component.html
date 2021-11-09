@@ -1,0 +1,146 @@
+<div class="container-lg wrapper">
+  <header>
+    <div class="row header-block d-flex justify-content-between align-items-center mt-2">
+      <div class="col-3 user-name-block mt-3">
+        <h4>User: {{userNickname}}</h4>
+      </div>
+      <div class="col-2 facebook-logo">
+        <img src="assets/facebook-logo.svg" alt="facebook-logo">
+        <button type="button" class="btn btn-secondary d-flex mx-auto" (click)="logOut()">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="main-container mt-2 d-flex">
+      <div class="col-3 buttons-block">
+        <button type="button" class="btn btn-primary my-page-button" (click)="goToMyPage()">My page</button>
+        <button type="button" class="btn btn-primary my-page-button" [routerLink]="['/friends', userId]">My friends</button>
+      </div>
+      <div class="col-9 content-block">
+        <form [formGroup]="searchFriendsForm" novalidate>
+          <div class="form-group">
+            <input type="text" class="form-control" id="form-post" formControlName="name" placeholder="Enter name of friend">
+          </div>
+          <div class="form-group mt-4 mb-4 d-flex justify-content-around content-block-post-button">
+            <button type="button" class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold"
+                    id="submit-button-login" [disabled]="searchFriendsForm.invalid" data-bs-toggle="modal" data-bs-target="#searchResultModal" (click)="searchFriends()">
+              Search
+            </button>
+            <button type="button" class="btn btn-default btn btn-secondary btn-lg btn-block col-12 fw-bold"
+                    id="friends-requests-button" data-bs-toggle="modal" data-bs-target="#friends-requests" (click)="getFriendsRequests()">
+              Friend requests
+            </button>
+          </div>
+        </form>
+        <div class="my-friends-block">
+          <div class="my-friends-block-item d-flex justify-content-between" *ngFor="let friend of friendsArray">
+            <a class="my-friends-block-item-nickname" [routerLink]="['/profile', friend.friendId]">{{friend.friendNickname}}</a>
+            <div class="friend-buttons-block mb-2">
+            <button type="button" class="btn btn-primary btn-sm chat-button" data-bs-toggle="modal" data-bs-target="#friend-chat-modal" (click)="chatFriend(friend.friendId, friend.friendNickname)">Chat</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="deleteFriend(friend.friendId)">Delete friend</button>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<div class="modal fade" id="searchResultModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Search result</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="no-users-result mx-auto" *ngIf="friendsCandidates.length == 0">
+          Nothing was found
+        </div>
+        <div class="no-users-result mx-auto" *ngIf="friendsCandidates.length != 0">
+          <div class="search-users-result-block" *ngFor="let item of friendsCandidates">
+            <div class="result-block-item d-flex justify-content-between">
+              <div class="result-nickname">{{item.userNickname}}</div>
+              <button type="button" class="btn btn-primary" (click)="addToFriends(item.userId)">Apply as a friend</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="friends-requests" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="friends-requests-title">Friend requests</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="friends-candidates-block mx-auto" *ngFor="let candidate of friendsRequests">
+          <div class="friends-candidates-item d-flex justify-content-between align-items-center">
+            {{candidate.candidateNickname}}
+            <div class="request-buttons-block">
+            <button type="button" class="btn btn-primary btn-sm" (click)="acceptFriendRequest(candidate.candidateId)">Add</button>
+            <button type="button" class="btn btn-secondary btn-sm decline-button" (click)="declineFriendRequest(candidate.candidateId)">Decline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="friend-chat-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="friends-chat-title">Chat with {{friendNickname}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="chatForm" novalidate>
+          <div class="form-group">
+            <input type="text" class="form-control" id="chat-message" formControlName="messageText" placeholder="Enter text of message">
+          </div>
+          <div class="form-group mt-4 mb-4 d-flex justify-content-around content-block-post-button">
+            <button type="button" class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold" [disabled]="chatForm.invalid" (click)="sendMessage()">
+              Send
+            </button>
+          </div>
+        </form>
+
+        <div class="messages-block" *ngFor="let message of messages">
+          <div class="my-message-block d-flex justify-content-start">
+          <div class="my-message" *ngIf="message.userId == userId && message.friendId == friendId">
+            <div class="message-title d-flex justify-content-center">My message:</div>
+            <div class="message-content">
+            {{message.messageText}}
+            </div>
+          </div>
+          </div>
+          <div class="friend-message-block d-flex justify-content-end">
+          <div class="friend-message" *ngIf="message.userId == friendId">
+            <div class="message-title d-flex justify-content-center">Message of {{friendNickname}}:</div>
+            <div class="message-content">
+          {{message.messageText}}
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

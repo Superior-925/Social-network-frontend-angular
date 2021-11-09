@@ -1,0 +1,79 @@
+<div class="container-lg wrapper">
+<header>
+  <div class="row header-block d-flex justify-content-between align-items-center mt-2">
+    <div class="col-3 user-name-block mt-3">
+      <h4>User: {{userNickname}}</h4>
+    </div>
+  <div class="col-2 facebook-logo">
+    <img src="assets/facebook-logo.svg" alt="facebook-logo">
+    <button type="button" class="btn btn-secondary d-flex mx-auto" (click)="logOut()">Log out</button>
+</div>
+  </div>
+</header>
+
+<main>
+  <div class="main-container mt-2 d-flex">
+    <div class="col-3 buttons-block">
+      <button type="button" class="btn btn-primary my-page-button" (click)="goToMyPage()">My page</button>
+      <button type="button" class="btn btn-primary my-page-button" [routerLink]="['/friends', userId]">My friends</button>
+    </div>
+    <div class="col-9 content-block">
+      <form [formGroup]="postForm" novalidate (ngSubmit)="postSubmit()">
+        <div class="form-group">
+          <textarea rows="3" type="text" class="form-control" id="form-post" formControlName="post" placeholder="Enter text of post" [ngClass]="{invisible: !pageOwner}"></textarea>
+        </div>
+        <div class="form-group mt-4 mb-4 d-flex justify-content-center content-block-post-button">
+          <button class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold" id="submit-button-login" [disabled]="postForm.invalid" [ngClass]="{invisible: !pageOwner}">
+            Publish
+          </button>
+        </div>
+      </form>
+
+      <div class="posts-block">
+        <div class="post-item mb-3" *ngFor="let post of userPosts">
+           <textarea class="post-item-textarea form-control" [(ngModel)]="post.postText" (change)="changePost(post.postId, post.postText)" [ngClass]="{disable: !pageOwner}"></textarea>
+          <div class="post-item-delete-button d-flex justify-content-end mt-2">
+           <button type="button" class="btn btn-primary" (click)="getComments(post.postId)">Comments</button>
+           <button type="button" class="btn btn-secondary delete-post-button" (click)="deletePost(post.postId)" [ngClass]="{invisible: !pageOwner}">Delete post</button>
+          </div>
+          <div class="commentsBlockStatus" *ngIf="commentsBlockStatus">
+            <div class="comments-block" *ngIf="postId == post.postId">
+              <div class="comment-block-comment-form mt-4">
+                <form [formGroup]="commentForm" novalidate (ngSubmit)="commentSubmit(post.postId)">
+                  <div class="form-group">
+                    <textarea rows="3" type="text" class="form-control comment-form" id="comment-post" formControlName="comment" placeholder="Enter text of comment"></textarea>
+                  </div>
+                  <div class="form-group mt-4 mb-4 d-flex justify-content-center content-block-post-button">
+                    <button class="btn btn-default btn btn-primary btn-lg btn-block col-12 fw-bold" [disabled]="commentForm.invalid">
+                      Post a comment
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class="comments-block-title d-flex justify-content-center">Comments:</div>
+              <div class="comments-block-content" *ngFor="let comment of comments">
+                <div *ngIf="postId == comment.postId">
+                <textarea type="text" class="form-control mt-3 mb-2" [(ngModel)]="comment.commentText" [ngClass]="{disable: userId != comment.authorId}" (change)="changeComment(comment.commentId, comment.commentText)"></textarea>
+                <div class="comment-author-block">
+                  <div class="comment-author">
+                    {{comment.author}}
+                  </div>
+                  <div class="comment-date">
+                    {{comment.date}}
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="close-comments-button d-flex justify-content-end">
+              <button class="btn btn-primary btn-sm" (click)="closeComments()">
+                Close comments
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
