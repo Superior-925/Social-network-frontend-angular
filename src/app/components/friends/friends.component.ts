@@ -1,16 +1,17 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {UserProfileService} from "../../../services/user-profile.service";
 import {AuthService} from "../../../services/auth.service";
 import {SocketService} from "../../../services/socket.service";
+import {friend, candidate, friendCandidate, message} from "../../interfaces";
 
 @Component({
   selector: 'app-friends',
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.scss']
 })
-export class FriendsComponent implements OnInit, OnChanges {
+export class FriendsComponent implements OnInit {
 
   searchFriendsForm : FormGroup;
 
@@ -20,13 +21,13 @@ export class FriendsComponent implements OnInit, OnChanges {
 
   userNickname?: string | number;
 
-  friendsCandidates: any = [];
+  friendsCandidates: candidate[] = [];
 
-  friendsRequests: any = [];
+  friendsRequests: friendCandidate[] = [];
 
-  friendsArray: any = [];
+  friendsArray: friend[] = [];
 
-  messages: any[] = [];
+  messages: message[] = [];
 
   ioConnection: any;
 
@@ -49,6 +50,11 @@ export class FriendsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/home'])
+    }
+
     this.route.params.subscribe((params: Params) => {
       let userId = params['id'];
       this.userProfileService.getUserInfo(userId).subscribe((response) => {
@@ -57,17 +63,14 @@ export class FriendsComponent implements OnInit, OnChanges {
         error => console.log(error)
       );
     });
-    this.userProfileService.getFriends(this.userId).subscribe((response: any) => {
-      response.body.forEach((item: any) => {
-        let userFriend = {friendId: item.id, friendNickname: item.nickname};
+    this.userProfileService.getFriends(this.userId).subscribe((response) => {
+      response.body.forEach((item) => {
+        let userFriend: friend = {friendId: item.id, friendNickname: item.nickname};
         this.friendsArray.push(userFriend);
       });
     },error => console.log(error)
     );
     this.initIoConnection();
-  }
-
-  ngOnChanges(): void {
   }
 
   logOut() {
@@ -88,26 +91,43 @@ export class FriendsComponent implements OnInit, OnChanges {
 
   searchFriends() {
     this.friendsCandidates.length = 0;
-    this.userProfileService.searchFriends(this.searchFriendsForm.value.name).subscribe((response: any) => {
-      response.body.forEach((item: any) => {
-        let candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
-        this.friendsCandidates.push(candidate);
+    this.userProfileService.searchFriends(this.searchFriendsForm.value.name).subscribe((response) => {
+        response.body.forEach((item) => {
+          if (this.friendsArray.length != 0) {
+            this.friendsArray.forEach((friend) => {
+              if (item.id != this.userId && item.id != friend.friendId) {
+                let candidate: candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
+                this.friendsCandidates.push(candidate);
+              }
+            });
+          }
+          if (this.friendsArray.length == 0) {
+            response.body.forEach((item) => {
+              if (item.id != this.userId) {
+                let candidate: candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
+                this.friendsCandidates.push(candidate);
+              }
+            })
+          }
       });
-      this.searchFriendsForm.reset();
+        this.searchFriendsForm.reset();
     }, error => console.log(error)
     )
   }
 
   addToFriends(friendId: number) {
+    let button = document.getElementById(`add-to-friend-${friendId}`);
+    button?.setAttribute("disabled", "disabled");
+    console.log(button);
     this.userProfileService.addFriend(this.userId, friendId).subscribe((response: any) => {
     }, error => console.log(error))
   }
 
   getFriendsRequests() {
-    this.userProfileService.getFriendsRequests(this.userId).subscribe((response: any) => {
+    this.userProfileService.getFriendsRequests(this.userId).subscribe((response) => {
       this.friendsRequests.length = 0;
       response.body.forEach((item: any) => {
-        let newCandidate = {candidateId: item.user.id, candidateEmail: item.user.email, candidateNickname: item.user.nickname };
+        let newCandidate: friendCandidate = {candidateId: item.user.id, candidateEmail: item.user.email, candidateNickname: item.user.nickname };
         this.friendsRequests.push(newCandidate);
       })
     }, error => console.log(error)
@@ -115,10 +135,10 @@ export class FriendsComponent implements OnInit, OnChanges {
   }
 
   acceptFriendRequest(candidateId: number) {
-    this.userProfileService.acceptFriendRequest(this.userId, candidateId).subscribe((response:any) => {
-      let userFriend = {friendId: response.body.addedFriend.id, friendNickname: response.body.addedFriend.nickname};
+    this.userProfileService.acceptFriendRequest(this.userId, candidateId).subscribe((response) => {
+      let userFriend: friend = {friendId: response.body.addedFriend.id, friendNickname: response.body.addedFriend.nickname};
       this.friendsArray.push(userFriend);
-      this.friendsRequests = this.friendsRequests.filter((item: any) => {
+      this.friendsRequests = this.friendsRequests.filter((item) => {
         item.candidateId != response.body.reqDestroy.userId;
       });
     },error => console.log(error)
@@ -126,8 +146,8 @@ export class FriendsComponent implements OnInit, OnChanges {
   }
 
   declineFriendRequest(candidateId: number) {
-    this.userProfileService.declineFriendRequest(this.userId, candidateId).subscribe((response:any) => {
-        this.friendsRequests = this.friendsRequests.filter((item: any) => {
+    this.userProfileService.declineFriendRequest(this.userId, candidateId).subscribe((response) => {
+        this.friendsRequests = this.friendsRequests.filter((item) => {
           item.candidateId != response.body.userId;
         });
       },error => console.log(error)
@@ -142,19 +162,17 @@ export class FriendsComponent implements OnInit, OnChanges {
   }
 
   private initIoConnection(): void {
-
-
     this.ioConnection = this.socketService.onMessage()
-      .subscribe((message: any) => {
+      .subscribe((message: message) => {
         this.messages.push(message);
       },error => console.log(error)
       );
   }
 
-  deleteFriend(friendId: any) {
+  deleteFriend(friendId: number) {
     if (confirm("Are you sure?")) {
       this.userProfileService.deleteFriend(this.userId, friendId).subscribe((response) => {
-        this.friendsArray = this.friendsArray.filter((item: any) => {
+        this.friendsArray = this.friendsArray.filter((item) => {
           item.friendId != response.body.friendId;
         })
       },error => console.log(error)
@@ -169,12 +187,12 @@ export class FriendsComponent implements OnInit, OnChanges {
 
   getMessages(userId: number, friendId: number) {
     this.socketService.getMessages(userId, friendId).subscribe((response) => {
-      response.body.myMessages.forEach((item: any) => {
-        let myMessage = {messageText: item.messageText, userId: item.userId, friendId: item.friendId, createdAt: item.createdAt};
+      response.body.myMessages.forEach((item) => {
+        let myMessage: message = {messageText: item.messageText, userId: item.userId, friendId: item.friendId, createdAt: item.createdAt};
         this.messages.push(myMessage);
       });
-      response.body.friendMessages.forEach((item: any) => {
-        let friendMessage = {messageText: item.messageText, userId: item.userId, friendId: item.friendId, createdAt: item.createdAt};
+      response.body.friendMessages.forEach((item) => {
+        let friendMessage: message = {messageText: item.messageText, userId: item.userId, friendId: item.friendId, createdAt: item.createdAt};
         this.messages.push(friendMessage);
       });
       this.messages.sort(function (a, b) {
@@ -185,6 +203,4 @@ export class FriendsComponent implements OnInit, OnChanges {
     },error => console.log(error)
     )
   }
-
-
 }

@@ -19,6 +19,32 @@
   box-shadow: 0 3px 3px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+.facebook-logo-desktop {
+  @media (max-width: 575.98px) {
+    display: none;
+  }
+}
+
+.facebook-logo-mobile {
+  width: 50%;
+  margin: auto;
+  @media (min-width: 576px) {
+    display: none;
+  }
+}
+
+.log-out-button {
+  @media (max-width: 575.98px) {
+    margin-top: 8px;
+  }
+}
+
+.user-name-block-title {
+  @media (max-width: 575.98px) {
+    font-size: 1rem;
+  }
+}
+
 .buttons-block {
   height: 100%;
   margin: 0.5rem 0.5rem;
@@ -43,6 +69,15 @@
 .content-block-post-button {
   margin: auto;
   width: 30%;
+  @media (max-width: 575.98px) {
+    width: 100%;
+  }
+}
+
+.post-item-delete-button {
+  @media (max-width: 575.98px) {
+    margin: auto;
+  }
 }
 
 .post-item {
@@ -66,6 +101,9 @@
 .comment-form {
   margin: auto;
   width: 70%;
+  @media (max-width: 575.98px) {
+    width: 100%;
+  }
 }
 
 .comment-author-block {
@@ -81,4 +119,10 @@
 .comment-author {
   font-weight: bold;
   margin-right: 1rem;
+}
+
+.close-comments-button {
+  @media (max-width: 575.98px) {
+    margin: 0.5rem auto;
+  }
 }

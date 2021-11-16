@@ -1,17 +1,18 @@
-import { Component, OnInit, OnChanges, AfterContentChecked, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {UserProfileService} from "../../../services/user-profile.service";
 import {AuthService} from "../../../services/auth.service";
 import {PostService} from "../../../services/post.service";
 import {SocketService} from "../../../services/socket.service";
+import {post} from "../../interfaces";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked, OnDestroy {
+export class ProfileComponent implements OnInit {
 
   postForm : FormGroup;
 
@@ -21,7 +22,7 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
 
   userNickname?: string | number;
 
-  userPosts: any = [];
+  userPosts: post[] = [];
 
   pageOwner?: boolean;
 
@@ -46,6 +47,11 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
   }
 
   ngOnInit(): void {
+
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/home'])
+    }
+
     let userId: number;
 
     this.route.params.subscribe((params: Params) => {
@@ -55,30 +61,18 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
      }
       this.userProfileService.getUserInfo(userId).subscribe((response) => {
           this.userNickname = response.body.userNickname;
-        },
-        error => console.log(error)
+        },error => console.log(error)
       );
       this.postService.getPosts(userId).subscribe((response) => {
           this.userPosts.length = 0;
           response.body.forEach((post: any) => {
-            let newPost = {postId: post.id, postText: post.postText};
+            let newPost: post = {postId: post.id, postText: post.postText};
             this.userPosts.push(newPost);
           });
-        }
-        ,
-        error => console.log(error))
-    });
+        },error => console.log(error))
+    },error => console.log(error));
     this.authService.startRefresh();
     this.initIoConnection();
-  }
-
-  ngOnChanges(): void {
-  }
-
-  ngAfterContentChecked(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   logOut() {
@@ -100,7 +94,7 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
   postSubmit() {
     this.postService.createPost(this.postForm.value.post, Number(localStorage.getItem('userId'))).subscribe((response) => {
       this.postForm.reset();
-      let newPost = {postId: response.body.id, postText: response.body.postText};
+      let newPost: post = {postId: response.body.id, postText: response.body.postText};
       this.userPosts.push(newPost);
     },
       error => console.log(error)
@@ -110,7 +104,7 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
   deletePost(postId: number) {
     if(confirm("Are you sure?")) {
       this.postService.deletePost(postId).subscribe((response) => {
-        let newPostsArray = this.userPosts.filter((item: any) => item.postId != response.body);
+        let newPostsArray = this.userPosts.filter((item) => item.postId != response.body);
         this.userPosts = newPostsArray;
       },
         error => console.log(error)
@@ -126,12 +120,11 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
     )
   }
 
-  getComments(postId: any) {
+  getComments(postId: number) {
     this.postId = postId;
     this.commentsBlockStatus = true;
     this.postService.getComments(postId).subscribe((response) => {
       this.comments.length = 0;
-      console.log(response);
       response.body.forEach((item: any) => {
        let date = new Date(item.createdAt);
        let newDate = date.toLocaleString();
@@ -143,7 +136,7 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
         let bDate: any = b.date;
         return aDate - bDate;
       });
-    })
+    },error => console.log(error))
   }
 
   commentSubmit(postId: number) {
@@ -158,14 +151,14 @@ export class ProfileComponent implements OnInit, OnChanges, AfterContentChecked,
         let newComment = {commentId: comment.id, commentText: comment.commentText, author: comment.user.nickname, date: newDate, authorId: comment.user.id, postId: comment.postId};
         this.comments.push(newComment);
         this.commentForm.reset();
-      });
+      },error => console.log(error));
     this.socketService.onChangeComment().subscribe((comment) => {
       this.comments.forEach((item: any) => {
         if (item.commentId == comment.id) {
           item.commentText = comment.commentText
         }
       })
-    })
+    },error => console.log(error))
   }
 
   closeComments() {

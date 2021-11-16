@@ -4,6 +4,7 @@ import {Observer} from "rxjs";
 import { io } from "socket.io-client";
 import {configDev} from "../environments/environment.dev";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {responseGetMessages} from "../app/interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class SocketService {
 
   public initSocket(): void {
     this.socket = io(`${configDev.host}:${configDev.port}`, {
+      extraHeaders: {
+        Authorization: localStorage.getItem('token') as string,
+      },
       query: {
         userId: localStorage.getItem("userId") as string
       }
@@ -25,7 +29,6 @@ export class SocketService {
   }
 
   public sendMessage(message: string, friendId: any, userId: any): void {
-    console.log(message);
     let newMessage = {friendId: friendId, userId: userId, messageText: message};
     this.socket.emit('message', newMessage);
   }
@@ -36,11 +39,11 @@ export class SocketService {
     });
   }
 
-  getMessages(userId: number, friendId: number): Observable<any> {
+  getMessages(userId: number, friendId: number): Observable<responseGetMessages> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}), params: {userId: userId, friendId: friendId},
       observe: 'response'};
-    return this.http.get<any>(`http://${configDev.host}:${configDev.port}/messages/`, httpOptionsGet);
+    return this.http.get<responseGetMessages>(`http://${configDev.host}:${configDev.port}/messages/`, httpOptionsGet);
   }
 
   postComment(commentText: string, postId: number, userId: number, userNickname: string) {

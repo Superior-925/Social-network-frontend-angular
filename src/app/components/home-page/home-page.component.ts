@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from "angularx-social-login";
+import { SocialAuthServiceConfig } from "angularx-social-login";
 import {AuthService} from "../../../services/auth.service";
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {SocketService} from "../../../services/socket.service";
@@ -8,9 +10,10 @@ import {SocketService} from "../../../services/socket.service";
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  providers: [SocialAuthService]
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit{
 
   signUpForm : FormGroup;
   loginForm: FormGroup;
@@ -51,6 +54,9 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem('token') && localStorage.getItem('userId')) {
+      this.router.navigate(['/profile', localStorage.getItem('userId')]);
+    }
   }
 
   loginSubmit() {
@@ -78,8 +84,6 @@ export class HomePageComponent implements OnInit {
         localStorage.setItem('refresh', responseData.body.refresh.token);
         localStorage.setItem('userId', responseData.body.userId);
         if (responseData.status == 200) {
-
-          // let myModal = new bootstrap.Modal(document.getElementById('createAccauntModal'));
           document.getElementById('close-modal')?.click();
           this.socketService.initSocket();
           this.router.navigate(['/profile', responseData.body.userId]);

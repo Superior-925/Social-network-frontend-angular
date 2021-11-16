@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {configDev} from "../environments/environment.dev";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {getPosts, responseCreatePost, responseDeletePost} from "../app/interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  createPost(postText: string, userId: number): Observable<any> {
+  createPost(postText: string, userId: number): Observable<responseCreatePost> {
 
     let httpOptions: {} = {
       headers: new HttpHeaders({
@@ -22,21 +23,21 @@ export class PostService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post(`http://${configDev.host}:${configDev.port}/post`, jsonBody, httpOptions);
+    return this.http.post<responseCreatePost>(`http://${configDev.host}:${configDev.port}/post`, jsonBody, httpOptions);
   }
 
-  getPosts(userId:number): Observable<any> {
+  getPosts(userId:number): Observable<getPosts> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<any>(`http://${configDev.host}:${configDev.port}/post/`+userId, httpOptionsGet);
+    return this.http.get<getPosts>(`http://${configDev.host}:${configDev.port}/post/`+userId, httpOptionsGet);
   }
 
-  deletePost(postId: number): Observable<any> {
+  deletePost(postId: number): Observable<responseDeletePost> {
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
       observe: 'response'};
 
-    return this.http.delete<any>(`http://${configDev.host}:${configDev.port}/post/`+postId, httpOptionsDelete);
+    return this.http.delete<responseDeletePost>(`http://${configDev.host}:${configDev.port}/post/`+postId, httpOptionsDelete);
   }
 
   changePostText(postId: number, postText: string): Observable<any> {

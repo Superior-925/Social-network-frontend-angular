@@ -14,7 +14,7 @@
   <main>
     <div class="main-container mt-2 d-flex">
       <div class="col-3 buttons-block">
-        <button type="button" class="btn btn-primary my-page-button" (click)="goToMyPage()">My page</button>
+        <button type="button" class="btn btn-primary my-page-button" id="goto-mypage-button" (click)="goToMyPage()">My page</button>
         <button type="button" class="btn btn-primary my-page-button" [routerLink]="['/friends', userId]">My friends</button>
       </div>
       <div class="col-9 content-block">
@@ -63,7 +63,7 @@
           <div class="search-users-result-block" *ngFor="let item of friendsCandidates">
             <div class="result-block-item d-flex justify-content-between">
               <div class="result-nickname">{{item.userNickname}}</div>
-              <button type="button" class="btn btn-primary" (click)="addToFriends(item.userId)">Apply as a friend</button>
+              <button type="button" id="add-to-friend-{{item.userId}}" class="btn btn-primary" (click)="addToFriends(item.userId)">Apply as a friend</button>
             </div>
           </div>
         </div>

@@ -1,27 +1,56 @@
-# SocialNetworkFrontend
+#  Social network application(client side)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.0.
+In this application, the user can:
+- The user can log in using his email / password
+- The user can log in using Google
+- User can create / modify / delete text posts
+- User can send other users a request for friendship
+- Having received a friendship request, user can accept or reject the request
+- User can see the posts of his friends
+- User can write comments on his posts and the posts of his friends
+- User can "end friendship" with another user friend
+- Friends can chat with each other
 
-## Development server
+## Application Technology Stack
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+The application is written by HTML/SCSS/TypeScript/Angular
 
-## Code scaffolding
+# To launch the app, you need to:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+ Open terminal and follow the next commands:
+ 
+ - Clone the repository
+ 
+  ```sh
+  $ git clone https://github.com/Superior-925/Social-network-frontend-angular.git
+  ```
 
-## Build
+- Go to project folder
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```sh
+ $ cd Social-network-frontend-angular
+  ```
 
-## Running unit tests
+- Install dependencies by NPM
+ 
+ ```
+ $ npm install
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Launch the applications
+ 
+ ```sh
+$ npm run start
+```
 
-## Running end-to-end tests
+- Go to the following link http://localhost:4200
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice.
+## To test the app run the following commands
 
-## Further help
+- Run this command for unit testing
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```sh
+$ npm run test
+ ```
+
+If you have questions - contact me on email skykeeper925@gmail.com. Best regards Antony Logunov.

@@ -13,6 +13,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./auth.interceptor";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import { FriendsComponent } from './components/friends/friends.component';
+import { SocialAuthService } from "angularx-social-login";
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -45,7 +46,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '897110712277-uglt74gq5f5dfd1dp1023udagqft6nmk.apps.googleusercontent.com'
+              '682692089151-74e2vqtl54gi2e4ep52espuv4plhfhb1.apps.googleusercontent.com'
             )
           },
         ]
