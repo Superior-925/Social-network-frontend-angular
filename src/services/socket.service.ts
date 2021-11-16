@@ -18,7 +18,7 @@ export class SocketService {
   userId: string = localStorage.getItem("userId") as string;
 
   public initSocket(): void {
-    this.socket = io(`${configDev.host}:${configDev.port}`, {
+    this.socket = io(`${configDev.url}`, {
       extraHeaders: {
         Authorization: localStorage.getItem('token') as string,
       },
@@ -43,7 +43,7 @@ export class SocketService {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}), params: {userId: userId, friendId: friendId},
       observe: 'response'};
-    return this.http.get<responseGetMessages>(`http://${configDev.host}:${configDev.port}/messages/`, httpOptionsGet);
+    return this.http.get<responseGetMessages>(`http://${configDev.url}/messages/`, httpOptionsGet);
   }
 
   postComment(commentText: string, postId: number, userId: number, userNickname: string) {

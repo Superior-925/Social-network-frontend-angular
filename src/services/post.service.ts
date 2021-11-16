@@ -23,21 +23,21 @@ export class PostService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<responseCreatePost>(`http://${configDev.host}:${configDev.port}/post`, jsonBody, httpOptions);
+    return this.http.post<responseCreatePost>(`http://${configDev.url}/post`, jsonBody, httpOptions);
   }
 
   getPosts(userId:number): Observable<getPosts> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<getPosts>(`http://${configDev.host}:${configDev.port}/post/`+userId, httpOptionsGet);
+    return this.http.get<getPosts>(`http://${configDev.url}/post/`+userId, httpOptionsGet);
   }
 
   deletePost(postId: number): Observable<responseDeletePost> {
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
       observe: 'response'};
 
-    return this.http.delete<responseDeletePost>(`http://${configDev.host}:${configDev.port}/post/`+postId, httpOptionsDelete);
+    return this.http.delete<responseDeletePost>(`http://${configDev.url}/post/`+postId, httpOptionsDelete);
   }
 
   changePostText(postId: number, postText: string): Observable<any> {
@@ -48,14 +48,14 @@ export class PostService {
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}), observe: 'response'};
 
-    return this.http.put<any>(`http://${configDev.host}:${configDev.port}/post/`+postId, jsonBody, httpOptions);
+    return this.http.put<any>(`http://${configDev.url}/post/`+postId, jsonBody, httpOptions);
   }
 
   getComments(postId: number): Observable<any> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<any>(`http://${configDev.host}:${configDev.port}/comment/`+postId, httpOptionsGet);
+    return this.http.get<any>(`http://${configDev.url}/comment/`+postId, httpOptionsGet);
   }
 
 }
