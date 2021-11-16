@@ -43,7 +43,7 @@ export class SocketService {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}), params: {userId: userId, friendId: friendId},
       observe: 'response'};
-    return this.http.get<responseGetMessages>(`http://${configDev.url}/messages/`, httpOptionsGet);
+    return this.http.get<responseGetMessages>(`${configDev.url}/messages/`, httpOptionsGet);
   }
 
   postComment(commentText: string, postId: number, userId: number, userNickname: string) {

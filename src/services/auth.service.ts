@@ -29,7 +29,7 @@ export class AuthService implements OnInit{
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<responseRefreshToken>(`http://${configDev.url}/refresh`, jsonBody, httpOptions);
+    return this.http.post<responseRefreshToken>(`${configDev.url}/refresh`, jsonBody, httpOptions);
   }
 
   signUp(nickname: string, email: string, password: string): Observable<responseUserDataAuth> {
@@ -38,7 +38,7 @@ export class AuthService implements OnInit{
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<responseUserDataAuth>(`http://${configDev.url}/signup`, jsonBody, httpOptions);
+    return this.http.post<responseUserDataAuth>(`${configDev.url}/signup`, jsonBody, httpOptions);
 
   };
 
@@ -47,7 +47,7 @@ export class AuthService implements OnInit{
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<responseUserDataAuth>(`http://${configDev.url}/login`, jsonBody, httpOptions);
+    return this.http.post<responseUserDataAuth>(`${configDev.url}/login`, jsonBody, httpOptions);
 
   };
 
@@ -56,7 +56,7 @@ export class AuthService implements OnInit{
     let body: {} = { nickname: nickname, email: email, provider: provider};
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<responseUserDataAuth>(`http://${configDev.url}/signup/google`, jsonBody, httpOptions);
+    return this.http.post<responseUserDataAuth>(`${configDev.url}/signup/google`, jsonBody, httpOptions);
 
   };
 
@@ -68,7 +68,7 @@ export class AuthService implements OnInit{
 
     let httpOptions: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') as string}), observe: 'response'};
 
-    return this.http.post<responseStatus>(`http://${configDev.url}/logout`, jsonBody, httpOptions);
+    return this.http.post<responseStatus>(`${configDev.url}/logout`, jsonBody, httpOptions);
   }
 
   startRefresh() {
