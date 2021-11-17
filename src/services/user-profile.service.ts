@@ -26,14 +26,14 @@ export class UserProfileService {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<responseUserInfo>(`http://${configDev.host}:${configDev.port}/user/info/`+userId, httpOptionsGet);
+    return this.http.get<responseUserInfo>(`${configDev.url}/user/info/`+userId, httpOptionsGet);
   }
 
   searchFriends(name: string): Observable<searchFriends> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response', params: {param: name}};
-    return this.http.get<searchFriends>(`http://${configDev.host}:${configDev.port}/friends/search/`, httpOptionsGet);
+    return this.http.get<searchFriends>(`${configDev.url}/friends/search/`, httpOptionsGet);
   }
 
   addFriend(userId: number ,friendId: number) {
@@ -48,14 +48,14 @@ export class UserProfileService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post(`http://${configDev.host}:${configDev.port}/friend/candidate`, jsonBody, httpOptions);
+    return this.http.post(`${configDev.url}/friend/candidate`, jsonBody, httpOptions);
   }
 
   getFriendsRequests(userId: number): Observable<responseFriendsRequests> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<responseFriendsRequests>(`http://${configDev.host}:${configDev.port}/friend/candidate/`+userId, httpOptionsGet);
+    return this.http.get<responseFriendsRequests>(`${configDev.url}/friend/candidate/`+userId, httpOptionsGet);
   }
 
   acceptFriendRequest(userId: number, candidateId: number): Observable<acceptFriendRequest> {
@@ -69,7 +69,7 @@ export class UserProfileService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.post<acceptFriendRequest>(`http://${configDev.host}:${configDev.port}/friend/`, jsonBody, httpOptions);
+    return this.http.post<acceptFriendRequest>(`${configDev.url}/friend/`, jsonBody, httpOptions);
   }
 
   declineFriendRequest(userId: number, candidateId: number): Observable<declineFriendRequest> {
@@ -83,21 +83,21 @@ export class UserProfileService {
 
     let jsonBody = JSON.stringify(body);
 
-    return this.http.put<declineFriendRequest>(`http://${configDev.host}:${configDev.port}/friend/`, jsonBody, httpOptions);
+    return this.http.put<declineFriendRequest>(`${configDev.url}/friend/`, jsonBody, httpOptions);
   }
 
   getFriends(userId: number): Observable<responseGetFriends> {
     let httpOptionsGet: {} = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'};
-    return this.http.get<responseGetFriends>(`http://${configDev.host}:${configDev.port}/friends/` + userId, httpOptionsGet);
+    return this.http.get<responseGetFriends>(`${configDev.url}/friends/` + userId, httpOptionsGet);
   }
 
   deleteFriend(userId: number, friendId: number): Observable<responseDeleteFriend> {
     let httpOptionsDelete: {} = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
       observe: 'response',params: {userId: userId, friendId: friendId}};
 
-    return this.http.delete<responseDeleteFriend>(`http://${configDev.host}:${configDev.port}/friend/`, httpOptionsDelete);
+    return this.http.delete<responseDeleteFriend>(`${configDev.url}/friend/`, httpOptionsDelete);
 
   }
 }
