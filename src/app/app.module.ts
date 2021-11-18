@@ -46,7 +46,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '682692089151-74e2vqtl54gi2e4ep52espuv4plhfhb1.apps.googleusercontent.com'
+              '327358661852-8eidmqtrppq3q0nk54vs2nh1es9ckv8e.apps.googleusercontent.com'
             )
           },
         ]

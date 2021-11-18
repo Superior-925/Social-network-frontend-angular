@@ -118,7 +118,6 @@ export class FriendsComponent implements OnInit {
   addToFriends(friendId: number) {
     let button = document.getElementById(`add-to-friend-${friendId}`);
     button?.setAttribute("disabled", "disabled");
-    console.log(button);
     this.userProfileService.addFriend(this.userId, friendId).subscribe((response: any) => {
     }, error => console.log(error))
   }
