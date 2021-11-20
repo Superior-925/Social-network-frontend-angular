@@ -36,6 +36,11 @@
                   </small>
                 </div>
                 <div class="submit-data-error d-flex justify-content-center mt-2" *ngIf="incorrectEmailPassword">Incorrect email or password!</div>
+                <div class="submit-data-error d-flex justify-content-center mt-2" *ngIf="loadingStatus">
+                  <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status"></div>
+                  </div>
+                </div>
               </div>
 
               <div class="form-group mt-4 mb-4 d-flex justify-content-center">
@@ -118,8 +123,13 @@
                 Password must be equal to or longer than six characters
               </small>
             </div>
-            <div class="submit-data-error" *ngIf="emailAlreadyExist">This email already exists!</div>
-            <div class="submit-data-error mt-3" *ngIf="nicknameAlreadyExist">This nickname already exists!</div>
+            <div class="submit-data-error d-flex justify-content-center mt-2" *ngIf="loadingStatusSignUp">
+              <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status"></div>
+              </div>
+            </div>
+            <div class="submit-data-error d-flex justify-content-center mt-3" *ngIf="emailAlreadyExist">This email already exists!</div>
+            <div class="submit-data-error d-flex justify-content-center mt-3" *ngIf="nicknameAlreadyExist">This nickname already exists!</div>
           </div>
 
           <div class="form-group mt-4 mb-4 d-flex justify-content-center">

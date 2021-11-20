@@ -91,27 +91,20 @@ export class FriendsComponent implements OnInit {
 
   searchFriends() {
     this.friendsCandidates.length = 0;
-    this.userProfileService.searchFriends(this.searchFriendsForm.value.name).subscribe((response) => {
-        response.body.forEach((item) => {
-          if (this.friendsArray.length != 0) {
-            this.friendsArray.forEach((friend) => {
-              if (item.id != this.userId && item.id != friend.friendId) {
-                let candidate: candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
-                this.friendsCandidates.push(candidate);
-              }
-            });
-          }
-          if (this.friendsArray.length == 0) {
-            response.body.forEach((item) => {
-              if (item.id != this.userId) {
-                let candidate: candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
-                this.friendsCandidates.push(candidate);
-              }
-            })
-          }
+    let friendsIdsIgnore = [];
+    friendsIdsIgnore.push(this.userId);
+    if (this.friendsArray.length != 0) {
+      this.friendsArray.forEach((friend) => {
+        friendsIdsIgnore.push(friend.friendId);
       });
+    }
+    this.userProfileService.searchFriends(this.searchFriendsForm.value.name, friendsIdsIgnore).subscribe((response) => {
+        response.body.forEach((item) => {
+          let candidate: candidate = {userId: item.id, userNickname: item.nickname, userEmail: item.email};
+          this.friendsCandidates.push(candidate);
+        });
         this.searchFriendsForm.reset();
-    }, error => console.log(error)
+      }, error => console.log(error)
     )
   }
 

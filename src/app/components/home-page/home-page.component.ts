@@ -21,6 +21,8 @@ export class HomePageComponent implements OnInit{
   emailAlreadyExist: boolean = false;
   nicknameAlreadyExist: boolean = false;
   incorrectEmailPassword: boolean = false;
+  loadingStatus: boolean = false;
+  loadingStatusSignUp: boolean = false;
 
   user?: SocialUser;
   loggedIn?: boolean;
@@ -60,6 +62,8 @@ export class HomePageComponent implements OnInit{
   }
 
   loginSubmit() {
+    this.incorrectEmailPassword = false;
+    this.loadingStatus = true;
     this.authService.logIn(this.loginForm.value.email, this.loginForm.value.password).subscribe( (responseData) => {
         if (responseData.status == 200) {
           localStorage.setItem('token', responseData.body.token);
@@ -73,12 +77,16 @@ export class HomePageComponent implements OnInit{
       {
         console.log(error);
         if (error.status == 401) {
+          this.loadingStatus = false;
           this.incorrectEmailPassword = true;
         }
       });
   }
 
   signupSubmit() {
+    this.loadingStatusSignUp = true;
+    this.emailAlreadyExist = false;
+    this.nicknameAlreadyExist = false;
     this.authService.signUp(this.signUpForm.value.nickname ,this.signUpForm.value.email, this.signUpForm.value.password).subscribe((responseData) => {
         localStorage.setItem('token', responseData.body.token);
         localStorage.setItem('refresh', responseData.body.refresh.token);
@@ -92,9 +100,11 @@ export class HomePageComponent implements OnInit{
       error => {
         console.log(error);
         if (error.status == 409) {
+          this.loadingStatusSignUp = false;
           this.emailAlreadyExist = true;
         }
         if (error.status == 406) {
+          this.loadingStatusSignUp = false;
           this.nicknameAlreadyExist = true;
         }
       });
